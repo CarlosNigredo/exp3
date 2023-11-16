@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Alineamiento de secuencias</title>
+        <script src="jspsych/dist/jspsych.js"></script>
+        <script src="jspsych/dist/plugin-html-keyboard-response.js"></script>
+        <script src="jspsych/dist/plugin-instructions.js"></script>
+        <script src="jspsych/dist/plugin-html-button-response.js"></script>
+        <script src="jspsych/dist/plugin-survey-multi-choice.js"></script>
+        <script src="jspsych/dist/plugin-survey-multi-select.js"></script>
+        <script src="jspsych/dist/plugin-survey-text.js"></script>
+        <script src="jspsych/dist/plugin-sketchpad.js"></script>
+        <script src="js/data_alineamientos.js"></script>
+        <script src="js/scripts.js"></script>
+        <script src="js/glyphLists.js"></script>
+
+        <link rel="stylesheet" href="jspsych/dist/jspsych.css">
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/customStyles.css">
+    </head>
+    <body></body>
+    <script>
+
+        const jsPsych = initJsPsych();
+        const timeline = [];
+
+        /* ----------------------------------------------------------------------- */
+        /*                                VARIABLES                                */
+        /* ----------------------------------------------------------------------- */
+
+        var nuevaPractica = false;
+        var practice_block_count = 0;
+        var practice_trial_count = 0;
+        var resp_trial = [];
+        var ejercicio_omitido = false;
+
+        // Desactiva clic derecho right click
+        document.addEventListener('contextmenu', event => {
+            event.preventDefault();
+        });
+
+
+        /* -------------------------------------------------------------------------- */
+        /*                                  PANTALLAS                                 */
+        /* -------------------------------------------------------------------------- */
+        
+        var pantallaInicial = {
+            type: jsPsychInstructions,
+            pages: [
+                '<p style="font-size:40px;">Alineamiento múltiple de secuencias</p><br><br>'
+            ],
+            show_clickable_nav: true,
+            button_label_previous: 'Regresar',
+            button_label_next: 'Siguiente'
+        }
+        timeline.push(pantallaInicial);
+
+        var consentimiento = {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                prompt: "Se me ha informado en qué consiste este estudio, cuáles son sus objetivos, cómo se almacenan y analizan los datos, así como su carácter anonimizado", 
+                name: 'consentimiento', 
+                options: ['Sí, y acepto participar en el estudio', 'No, y no acepto participar'],
+                required: true
+                }
+            ],
+            button_label: 'Siguiente',
+        }
+        timeline.push(consentimiento);
+        
+        var edad = {
+            type: jsPsychSurveyText,
+            questions: [
+                {prompt: 'Ingresa tu edad', name: 'edad', required: true}
+            ],
+            button_label: 'Siguiente',
+            on_load: function(data){
+                numPad = document.getElementById('jspsych-survey-text-0');
+                htmlString = '<div class="numpad-wrapper"><div class="numpad"><div class="numpad--buttons nums">1</div><div class="numpad--buttons nums">2</div><div class="numpad--buttons nums">3</div><div class="numpad--buttons nums">4</div><div class="numpad--buttons nums">5</div><div class="numpad--buttons nums">6</div><div class="numpad--buttons nums">7</div><div class="numpad--buttons nums">8</div><div class="numpad--buttons nums">9</div><div class="numpad--buttons notnums del">Borrar</div><div class="numpad--buttons nums">0</div><div class="numpad--buttons notnums ok">OK</div></div></div>'
+                numPad.insertAdjacentHTML('beforeend', htmlString);
+
+                const numpad = document.querySelector(".numpad-wrapper");
+                const numpadClasses = numpad.classList;
+                const inputNum = document.querySelector("#input-0");
+                var currentTxt = inputNum.textContent;
+
+                inputNum.addEventListener('click', () => {
+                    const toggle = numpadClasses.toggle("show", true);
+                })
+
+                const numpadNumBtns = document.querySelectorAll('.nums');
+
+                numpadNumBtns.forEach(x => {
+                    x.addEventListener('click', function handleClick(event) {
+                        let clickedNum = this.textContent;
+                        currentTxt = currentTxt.concat(clickedNum);
+                        inputNum.value = currentTxt;
+                    });
+                });
+
+                const deleteNum = document.querySelector(".del");
+
+                deleteNum.addEventListener('click', () => {
+                    currentTxt = currentTxt.slice(0, -1);
+                    inputNum.value = currentTxt;
+                })
+
+                const cerrar = document.querySelector(".ok");
+
+                cerrar.addEventListener('click', () => {
+                    const toggle = numpadClasses.toggle("show", false);
+                })
+            }
+        }
+        timeline.push(edad);
+
+        var estudios = {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                prompt: "Nivel de estudios (en curso o completado)", 
+                name: 'escolaridad', 
+                options: ['Licenciatura', 'Maestría', 'Doctorado'],
+                required: true
+                }
+            ],
+            button_label: 'Siguiente',
+        }
+        timeline.push(estudios);
+
+        var presentacion = {
+            type: jsPsychInstructions,
+            pages: [
+                '<p style="font-size:40px">Presentación</p>' +
+                '<p>Veamos primero qué son los alineamientos</p>'
+                ],
+            button_label_next: "Siguiente",
+            button_label_previous: "Anterior",
+            show_clickable_nav: true
+        }
+        timeline.push(presentacion);
+
+        // Explicación MSA convencional
+        var explicacion_msa = {
+            type: jsPsychInstructions,
+            pages: function(){
+                return data_intro_convencional;
+                }, 
+            button_label_next: "Siguiente",
+            button_label_previous: "Anterior",
+            show_clickable_nav: true
+        }
+        timeline.push(explicacion_msa);
+
+        // Explicación MSA tipográfico peso
+        var explicacion_msa_peso = {
+            type: jsPsychInstructions,
+            pages: function(){
+                return data_intro_peso
+                }, 
+            button_label_next: "Siguiente",
+            button_label_previous: "Anterior",
+            show_clickable_nav: true
+        }
+        timeline.push(explicacion_msa_peso);
+
+        // Explicación MSA tipográfico ancho
+        var explicacion_msa_ancho = {
+            type: jsPsychInstructions,
+            pages: function(){
+                return data_intro_ancho
+                }, 
+            button_label_next: "Siguiente",
+            button_label_previous: "Anterior",
+            show_clickable_nav: true
+        }
+        timeline.push(explicacion_msa_ancho);
+
+        var instrucciones = {
+            type: jsPsychInstructions,
+            pages: [
+                '<p style="font-size:24px">Hagamos una ronda de práctica, para familiarizarnos con la prueba</p>'
+                ],
+            button_label_next: "Siguiente",
+            button_label_previous: "Anterior",
+            show_clickable_nav: true
+        }
+        timeline.push(instrucciones);
+
+
+        var practice_trial = {
+            type: jsPsychSurveyMultiSelect,
+            preamble: function(){
+                let keys = Object.keys(jsPsych.timelineVariable("secuencias"));
+                let xyz;
+                let jnds = jsPsych.timelineVariable("jnds");
+                let tipo = jsPsych.timelineVariable("tipo");
+                if(tipo === "msa-conv"){
+                    xyz = 4;
+                } else {xyz = 3}
+                let string = "";
+                let grupoSecuencias = "";
+                
+                for(i = 0; i < xyz; i++){
+
+                    let seq = keys[i];
+                    let amin = jsPsych.timelineVariable("secuencias")[keys[i]];
+                    let cons = jsPsych.timelineVariable("secuencias")[keys[3]];
+
+                    
+                    for(j=0; j < amin.length; j++){
+                        let clase_cons = "";
+                        switch(cons[j]){
+                            case('*'):
+                                clase_cons = "identical";
+                            break;
+                            case(':'):
+                                clase_cons = "conserved";
+                            break;
+                            case('.'):
+                                clase_cons = "semi-conserved";
+                            break;
+                            case(' '):
+                                clase_cons = "non-conserved";
+                        }
+
+                        let item = '<div class="item item-' + (j+1) + ' ' + clase_cons + '">' + amin[j] + '</div>';
+                        
+                        string += item;
+                    }
+                    string = '<div class="container cont-' + seq + '">' + string + '</div>';
+
+
+                    grupoSecuencias += string;
+                    
+                    string = '';
+                }
+                
+                let alineamiento = '<div class="alineamiento ' + jnds + '" id="' + tipo + '">' + grupoSecuencias + '</div>'
+
+                return alineamiento;
+            },
+            questions: [
+                {
+                prompt: function(){
+                    let str = jsPsych.timelineVariable("posicion");
+                    return '1. ¿Qué grado de conservación tiene la columna ' + str + '?';
+                },
+                options: ["Idéntico", "Conservado", "Semiconservado", "No conservado"], 
+                horizontal: true,
+                required: true,
+                name: 'posicion'
+            },
+            {
+                prompt: function(){
+                    let str = jsPsych.timelineVariable("grado");
+                    return "2. Selecciona tres columnas " + str;
+                },
+                options: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60"], 
+                horizontal: true,
+                required: true,
+                name: 'grado'
+                },
+                {
+                prompt: "3. Localiza el segmento idéntico más largo. Selecciona las columnas inicial y final", 
+                options: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60"], 
+                horizontal: true,
+                required: true,
+                name: 'segmento'
+                }
+            ], 
+            randomize_question_order: false,
+            button_label: "Siguiente",
+            required_message: "Por favor completa tus respuestas antes de continuar"
+        }
+
+        var feedback = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: function() {
+                let feedback_text = '<span style="color:red;font-size:40px;">Ups, hay que practicar más <br/><br/> >_< </span>';
+                
+                let uno_resp = jsPsych.data.getLastTrialData().values()[0].response['posicion'];
+                let uno_correcto = jsPsych.timelineVariable("respuesta_uno");
+
+                let dos_resp = jsPsych.data.getLastTrialData().values()[0].response['grado'];
+                let dos_correcto = jsPsych.timelineVariable("respuesta_dos");
+                
+                let tres_resp = jsPsych.data.getLastTrialData().values()[0].response['segmento'];
+                let tres_correcto = jsPsych.timelineVariable("respuesta_tres");
+
+                let check_uno = uno_resp.every( ai => uno_correcto.includes(ai) );
+                
+                let check_dos = dos_resp.every( ai => dos_correcto.includes(ai) );
+                if (dos_resp.length === 3 && check_dos === true){
+                    check_dos = true;
+                } else {
+                    check_dos = false;
+                }
+                let check_tres = tres_resp.every( ai => tres_correcto.includes(ai) );
+
+                resp_trial = [check_uno,check_dos,check_tres];
+                
+                let cont_resp_trial = resp_trial.filter(x => x == true).length;
+
+                practice_trial_count = cont_resp_trial;
+                practice_block_count += cont_resp_trial;
+
+                if(cont_resp_trial > 0 && cont_resp_trial < 3) {
+                    feedback_text = '<span style="color:green;font-size:40px;">Tuviste ' + cont_resp_trial  + ' acierto(s)<br/><br/> n_n</span>';
+                } else if(cont_resp_trial === 3) {
+                    feedback_text = '<span style="color:green;font-size:40px;">¡Todas correctas!<br/><br/> n_n</span>';
+
+                }
+
+                return feedback_text;
+            },
+            data: {
+                seccion: "practica",
+            },
+            options: 'NO_KEYS',
+            trial_duration: 1500,
+            on_finish: function(data){
+                data.numAciertos = practice_trial_count;
+                data.aciertos = resp_trial;
+
+                practice_trial_count = 0;
+            }
+        }
+
+        var ensayosPractica = {
+            timeline: [practice_trial, feedback],
+            timeline_variables: data_practica
+        }
+
+        var mensajeRepetirPractica = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: '<p style="font-size:24px; line-height:1.35;">Tendremos que repetir la ronda de práctica, <br/> para que nos quede todo más claro</p><br><br>',
+            choices: ['Repetir práctica']
+        }
+
+        var repetirPractica = {
+            timeline: [mensajeRepetirPractica],
+            conditional_function: function() {
+                var ultimaRonda = jsPsych.data.get().filter({seccion: 'practica'}).last(3);
+
+                var proporcion = practice_block_count/9;
+                console.log(proporcion);
+                if (proporcion < .75) {
+                    nuevaPractica = true;
+                    practice_block_count = 0;
+                    return true;
+                } else {
+                    nuevaPractica = false;
+                    return false;
+                }
+            }
+        }
+
+        var loopPractica = {
+            timeline: [ensayosPractica,repetirPractica],
+            loop_function: function(){
+                if (nuevaPractica == true) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+       timeline.push(loopPractica);
+
+        var finPractica = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: '<p style="font-size:24px;  line-height:1.35;">¡Has terminado la práctica con éxito! <br/> Da clic para comenzar la prueba</p><br><br>',
+            choices: ['Comenzar']
+        }
+        timeline.push(finPractica);
+
+        var ejercicio = {
+            type: jsPsychSurveyMultiSelect,
+            preamble: function(){
+                let keys = Object.keys(jsPsych.timelineVariable("secuencias"));
+                let xyz;
+                let jnds = jsPsych.timelineVariable("jnds");
+                let tipo = jsPsych.timelineVariable("tipo");
+                if(tipo === "msa-conv"){
+                    xyz = 4;
+                } else {xyz = 3}
+                let string = "";
+                let grupoSecuencias = "";
+                
+                for(i = 0; i < xyz; i++){
+
+                    let seq = keys[i];
+                    let amin = jsPsych.timelineVariable("secuencias")[keys[i]];
+                    let cons = jsPsych.timelineVariable("secuencias")[keys[3]];
+
+                    
+                    for(j=0; j < amin.length; j++){
+                        let clase_cons = "";
+                        switch(cons[j]){
+                            case('*'):
+                                clase_cons = "identical";
+                            break;
+                            case(':'):
+                                clase_cons = "conserved";
+                            break;
+                            case('.'):
+                                clase_cons = "semi-conserved";
+                            break;
+                            case(' '):
+                                clase_cons = "non-conserved";
+                        }
+
+                        let item = '<div class="item item-' + (j+1) + ' ' + clase_cons + '">' + amin[j] + '</div>';
+                        
+                        string += item;
+                    }
+                    string = '<div class="container cont-' + seq + '">' + string + '</div>';
+
+                    grupoSecuencias += string;
+                    
+                    string = '';
+                }
+                
+                let alineamiento = '<div class="alineamiento ' + jnds + '" id="' + tipo + '">' + grupoSecuencias + '</div>'
+
+                return alineamiento;
+            },
+            questions: [
+                {
+                    prompt: function(){
+                        let str = jsPsych.timelineVariable("posicion_uno");
+                        return '1. ¿Qué grado de conservación tiene la columna ' + str + '?';
+                    },
+                    options: ["Idéntico", "Conservado", "Semiconservado", "No conservado"], 
+                    horizontal: true,
+                    required: true,
+                    name: 'posicion_uno'
+                },
+                {
+                    prompt: function(){
+                        let str = jsPsych.timelineVariable("posicion_dos");
+                        return '2. ¿Qué grado de conservación tiene la columna ' + str + '?';
+                    },
+                    options: ["Idéntico", "Conservado", "Semiconservado", "No conservado"], 
+                    horizontal: true,
+                    required: true,
+                    name: 'posicion_dos'
+                },
+                {
+                    prompt: function(){
+                        let str = jsPsych.timelineVariable("posicion_tres");
+                        return '3. ¿Qué grado de conservación tiene la columna ' + str + '?';
+                    },
+                    options: ["Idéntico", "Conservado", "Semiconservado", "No conservado"], 
+                    horizontal: true,
+                    required: true,
+                    name: 'posicion_tres'
+                },
+                {
+                    prompt: function(){
+                        let str = jsPsych.timelineVariable("grado_uno");
+                        return "4. Selecciona tres columnas " + str;
+                    },
+                    options: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60"], 
+                    horizontal: true,
+                    required: true,
+                    name: 'grado_uno'
+                },
+                {
+                    prompt: function(){
+                        let str = jsPsych.timelineVariable("grado_dos");
+                        return "5. Selecciona tres columnas " + str;
+                    },
+                    options: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60"], 
+                    horizontal: true,
+                    required: true,
+                    name: 'grado_dos'
+                },
+                {
+                    prompt: "6. Localiza el segmento idéntico más largo. Selecciona las columnas inicial y final", 
+                    options: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60"], 
+                    horizontal: true,
+                    required: true,
+                    name: 'segmento'
+                },
+                {
+                    prompt: "* No es posible resolver las preguntas, porque...", 
+                    options: ["La diferencia entre letras no se percibe", "Percibo cierta diferencia pero es insuficiente para realizar las tareas", "Otra razón (por favor indíquela al facilitador)"], 
+                    horizontal: false,
+                    required: false,
+                    name: 'no-resuelto'
+                }
+            ], 
+            randomize_question_order: false,
+            button_label: "Siguiente",
+            required_message: "Por favor completa tus respuestas antes de continuar",
+            css_classes: ['exercise'],
+            on_load: function(){
+                
+                let preguntaSeis = document.querySelectorAll("#jspsych-survey-multi-select-6 input[type='checkbox']");
+
+                for(i=0; i<preguntaSeis.length; i++){
+                    preguntaSeis[i].addEventListener("click", autoFill);
+                }
+                // Marca las casillas 1 de todas las preguntas, cuando se selecciona alguna opción de la última pregunta
+                function autoFill() {
+                    let preguntas = document.querySelectorAll("#jspsych-survey-multi-select-0, #jspsych-survey-multi-select-1, #jspsych-survey-multi-select-2, #jspsych-survey-multi-select-3, #jspsych-survey-multi-select-4, #jspsych-survey-multi-select-5");
+
+                    for(j=0; j<preguntas.length; j++){
+                        preguntas[j].querySelector("input[type='checkbox']").checked = true;
+                    }
+
+                    ejercicio_omitido = true;
+                }
+            },
+            on_finish: function(data){                
+                
+                let uno_resp = jsPsych.data.getLastTrialData().values()[0].response['posicion_uno'];
+                let uno_correcto = jsPsych.timelineVariable("respuesta_uno");
+
+                let dos_resp = jsPsych.data.getLastTrialData().values()[0].response['posicion_dos'];
+                let dos_correcto = jsPsych.timelineVariable("respuesta_dos");
+
+                let tres_resp = jsPsych.data.getLastTrialData().values()[0].response['posicion_tres'];
+                let tres_resp_length = tres_resp.length;
+                let tres_correcto = jsPsych.timelineVariable("respuesta_tres");
+                
+                let cuatro_resp = jsPsych.data.getLastTrialData().values()[0].response['grado_uno'];
+                let cuatro_correcto = jsPsych.timelineVariable("respuesta_cuatro");
+                
+                let cinco_resp = jsPsych.data.getLastTrialData().values()[0].response['grado_dos'];
+                let cinco_correcto = jsPsych.timelineVariable("respuesta_cinco");
+
+                let seis_resp = jsPsych.data.getLastTrialData().values()[0].response['segmento'];
+                let seis_correcto = jsPsych.timelineVariable("respuesta_seis");
+
+                // check para posiciones individuales, q 1 2 3
+                let check_uno = uno_resp.every( ai => uno_correcto.includes(ai) );
+                let check_dos = dos_resp.every( ai => dos_correcto.includes(ai) );
+                let check_tres = tres_resp.every( ai => tres_correcto.includes(ai) );
+                
+                //check para tres posiciones, q 4 5
+                let check_cuatro = cuatro_resp.every( ai => cuatro_correcto.includes(ai) );
+                if (cuatro_resp.length === 3 && check_cuatro === true){
+                    check_cuatro = true;
+                } else {
+                    check_cuatro = false;
+                }
+                let check_cinco = cinco_resp.every( ai => cinco_correcto.includes(ai) );
+                if (cinco_resp.length === 3 && check_cinco === true){
+                    check_cinco = true;
+                } else {
+                    check_cinco = false;
+                }
+                
+                //check para segmento
+                let check_seis = seis_resp.every( ai => seis_correcto.includes(ai) );
+
+                let resp_exercise = [check_uno,check_dos,check_tres,check_cuatro,check_cinco,check_seis];
+                
+                let cont_resp_exercise = resp_exercise.filter(x => x == true).length;
+
+                let correctas = [uno_correcto, dos_correcto, tres_correcto, cuatro_correcto, cinco_correcto, seis_correcto]
+                data.correctas = correctas;
+
+                if(ejercicio_omitido === true) {
+                    cont_resp_exercise = 0;
+                    data.omitido = "OMITIDO";
+                }
+                ejercicio_omitido = false;
+                
+                data.aciertos = resp_exercise;
+                data.eficacia = (cont_resp_exercise/6)*100;
+                data.tipo = jsPsych.timelineVariable("tipo");
+                data.jnds = jsPsych.timelineVariable("jnds");
+
+            }
+        }
+
+        var prueba = {
+            timeline: [ejercicio],
+            timeline_variables: data_ejercicios,
+            randomize_order: true
+        }
+        timeline.push(prueba);
+
+        var agradecimiento = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: '<span style="font-size:40px;">GRACIAS POR SU PARTICIPACIÓN</span>',
+            choices: 'NO_KEYS',
+            on_start: function(data){
+                jsPsych.data.get().localSave('csv', 'data.csv');
+            }
+        }
+        timeline.push(agradecimiento);
+
+        jsPsych.run(timeline);
+    </script>
+</html>

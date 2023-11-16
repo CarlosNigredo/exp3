@@ -1,0 +1,110 @@
+@font-face {
+    font-family: "dedomena";
+    src: url("../fonts/DedomenaVARVF.ttf") format('truetype');
+  }
+
+* {
+    font-family: 'dedomena';
+} 
+
+.wrapper {
+    margin-top: 0 auto;
+}
+
+.container {
+    display: block;
+    height: 30px;
+}
+
+.item {
+    /* display: inline-block; */
+    float: left;
+    width: 13px;
+    font-size: 21px;
+    font-variation-settings: 'wdth' 435, 'wght' 90;
+    /* background-color: bisque; */
+    text-align: center;
+}
+
+.btn {
+    display: inline-block;
+    width: 50px;
+    height: 30px;
+    background-color: aquamarine;
+    cursor: pointer;
+    padding: 10px;
+}
+
+/* semi-conserved */
+.item-16,.item-19,.item-22,.item-36,.item-58 {
+    font-variation-settings: 'wdth' 540, 'wght' 90;
+    width: 15px;
+}
+
+/* conserved */
+.item-04,.item-07,.item-08,.item-09,.item-11,.item-13,.item-18,.item-21,.item-27,.item-29,.item-33,.item-37,.item-40,.item-49,.item-56,.item-57 {
+    font-variation-settings: 'wdth' 657, 'wght' 90;
+    width: 17px;
+}
+
+/* identical */
+.item-01, .item-03, .item-15, .item-17, .item-26, .item-28, .item-30, .item-31, .item-32, .item-34, .item-38, .item-41, .item-42, .item-43, .item-44, .item-45, .item-46, .item-47, .item-48, .item-52, .item-53, .item-54, .item-55, .item-59, .item-60 {
+    font-variation-settings: 'wdth' 816, 'wght' 90;
+    width: 20px;
+}
+
+
+.scales {
+    font-size: 60px;
+}
+.peso-min{
+    font-variation-settings: 'wdth' 530, 'wght' 40;
+}
+.peso-max{
+    font-variation-settings: 'wdth' 530, 'wght' 150;
+}
+.peso-1{
+    font-variation-settings: 'wdth' 530, 'wght' 70;
+}
+.peso-2{
+    font-variation-settings: 'wdth' 530, 'wght' 100;
+}
+.peso-3{
+    font-variation-settings: 'wdth' 530, 'wght' 130;
+}
+
+
+
+.ancho-min{
+    font-variation-settings: 'wdth' 430, 'wght' 95;
+}
+.ancho-1{
+    font-variation-settings: 'wdth' 540, 'wght' 95;
+}
+.ancho-2{
+    font-variation-settings: 'wdth' 660, 'wght' 95;
+}
+.ancho-3{
+    font-variation-settings: 'wdth' 780, 'wght' 95;
+}
+.ancho-max{
+    font-variation-settings: 'wdth' 935, 'wght' 95;
+}
+
+
+
+.obl-min{
+    font-variation-settings: 'wdth' 530, 'wght' 95, 'slnt' 0;
+}
+.obl-1{
+    font-variation-settings: 'wdth' 530, 'wght' 95, 'slnt' 6;
+}
+.obl-2{
+    font-variation-settings: 'wdth' 530, 'wght' 95, 'slnt' 12;
+}
+.obl-3{
+    font-variation-settings: 'wdth' 530, 'wght' 95, 'slnt' 18;
+}
+.obl-max{
+    font-variation-settings: 'wdth' 530, 'wght' 95, 'slnt' 25;
+}
