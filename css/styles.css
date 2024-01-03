@@ -288,65 +288,65 @@
     font-variation-settings: 'wdth' 460, 'wght' 41;
 }
 #msa-peso.jnds-1 .semi-conserved {
-    font-variation-settings: 'wdth' 460, 'wght' 44;
+    font-variation-settings: 'wdth' 460, 'wght' 45;
 }
 #msa-peso.jnds-1 .conserved {
-    font-variation-settings: 'wdth' 460, 'wght' 47;
+    font-variation-settings: 'wdth' 460, 'wght' 49;
 }
 #msa-peso.jnds-1 .identical {
-    font-variation-settings: 'wdth' 460, 'wght' 51;
+    font-variation-settings: 'wdth' 460, 'wght' 54;
 }
 
 #msa-peso.jnds-2 .item {
     font-variation-settings: 'wdth' 460, 'wght' 41;
 }
 #msa-peso.jnds-2 .semi-conserved {
-    font-variation-settings: 'wdth' 460, 'wght' 47;
+    font-variation-settings: 'wdth' 460, 'wght' 49;
 }
 #msa-peso.jnds-2 .conserved {
-    font-variation-settings: 'wdth' 460, 'wght' 55;
+    font-variation-settings: 'wdth' 460, 'wght' 59;
 }
 #msa-peso.jnds-2 .identical {
-    font-variation-settings: 'wdth' 460, 'wght' 64;
+    font-variation-settings: 'wdth' 460, 'wght' 70;
 }
 
 #msa-peso.jnds-3 .item {
     font-variation-settings: 'wdth' 460, 'wght' 41;
 }
 #msa-peso.jnds-3 .semi-conserved {
-    font-variation-settings: 'wdth' 460, 'wght' 51;
+    font-variation-settings: 'wdth' 460, 'wght' 54;
 }
 #msa-peso.jnds-3 .conserved {
-    font-variation-settings: 'wdth' 460, 'wght' 64;
+    font-variation-settings: 'wdth' 460, 'wght' 70;
 }
 #msa-peso.jnds-3 .identical {
-    font-variation-settings: 'wdth' 460, 'wght' 82;
+    font-variation-settings: 'wdth' 460, 'wght' 89;
 }
 
 #msa-peso.jnds-4 .item {
     font-variation-settings: 'wdth' 460, 'wght' 41;
 }
 #msa-peso.jnds-4 .semi-conserved {
-    font-variation-settings: 'wdth' 460, 'wght' 55;
+    font-variation-settings: 'wdth' 460, 'wght' 59;
 }
 #msa-peso.jnds-4 .conserved {
-    font-variation-settings: 'wdth' 460, 'wght' 76;
+    font-variation-settings: 'wdth' 460, 'wght' 82;
 }
 #msa-peso.jnds-4 .identical {
-    font-variation-settings: 'wdth' 460, 'wght' 105;
+    font-variation-settings: 'wdth' 460, 'wght' 113;
 }
 
 #msa-peso.jnds-5 .item {
     font-variation-settings: 'wdth' 460 , 'wght' 41;
 }
 #msa-peso.jnds-5 .semi-conserved {
-    font-variation-settings: 'wdth' 460 , 'wght' 59;
+    font-variation-settings: 'wdth' 460 , 'wght' 64;
 }
 #msa-peso.jnds-5 .conserved {
-    font-variation-settings: 'wdth' 460 , 'wght' 89;
+    font-variation-settings: 'wdth' 460 , 'wght' 97;
 }
 #msa-peso.jnds-5 .identical {
-    font-variation-settings: 'wdth' 460 , 'wght' 134;
+    font-variation-settings: 'wdth' 460 , 'wght' 140;
 }
 
 /* CONTROLAN LA APARIENCIA DE LA LEYENDA PARA LA SECUENCIA REPRESENTADA CON PESO */
@@ -383,16 +383,16 @@
 #msa-ancho.jnds-1 .item {
     float: left;
     width: 13px;
-    font-variation-settings: 'wdth' 434, 'wght' 90;
+    font-variation-settings: 'wdth' 440, 'wght' 90;
 }
 
 #msa-ancho.jnds-1 .semi-conserved {
-    font-variation-settings: 'wdth' 468, 'wght' 90;
+    font-variation-settings: 'wdth' 472, 'wght' 90;
     width: 15px;
 }
 
 #msa-ancho.jnds-1 .conserved {
-    font-variation-settings: 'wdth' 503, 'wght' 90;
+    font-variation-settings: 'wdth' 505, 'wght' 90;
     width: 16px;
 }
 
@@ -403,27 +403,27 @@
 #msa-ancho.jnds-2 .item {
     float: left;
     width: 13px;
-    font-variation-settings: 'wdth' 434, 'wght' 90;
+    font-variation-settings: 'wdth' 440, 'wght' 90;
 }
 
 #msa-ancho.jnds-2 .semi-conserved {
-    font-variation-settings: 'wdth' 503, 'wght' 90;
+    font-variation-settings: 'wdth' 505, 'wght' 90;
     width: 15px;
 }
 
 #msa-ancho.jnds-2 .conserved {
-    font-variation-settings: 'wdth' 577, 'wght' 90;
+    font-variation-settings: 'wdth' 575, 'wght' 90;
     width: 17px;
 }
 
 #msa-ancho.jnds-2 .identical {
-    font-variation-settings: 'wdth' 653, 'wght' 90;
+    font-variation-settings: 'wdth' 650, 'wght' 90;
     width: 19px;
 }
 #msa-ancho.jnds-3 .item {
     float: left;
     width: 14px;
-    font-variation-settings: 'wdth' 434, 'wght' 90;
+    font-variation-settings: 'wdth' 440, 'wght' 90;
 }
 
 #msa-ancho.jnds-3 .semi-conserved {
@@ -432,12 +432,12 @@
 }
 
 #msa-ancho.jnds-3 .conserved {
-    font-variation-settings: 'wdth' 653, 'wght' 90;
+    font-variation-settings: 'wdth' 650, 'wght' 90;
     width: 18px;
 }
 
 #msa-ancho.jnds-3 .identical {
-    font-variation-settings: 'wdth' 784, 'wght' 90;
+    font-variation-settings: 'wdth' 781, 'wght' 90;
     width: 23px;
 }
 
